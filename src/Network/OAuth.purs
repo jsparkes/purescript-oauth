@@ -1,7 +1,7 @@
 module Network.OAuth where
 
 import Prelude
-import App.Data.Jwt as Jwt
+import Jwt as Jwt
 import App.Data.Aff (hushAff)
 import App.Formatting (messages)
 import App.Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
