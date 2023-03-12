@@ -24,7 +24,7 @@ import Data.Newtype (unwrap)
 import Data.String (length)
 import Data.Time.Duration (Milliseconds(..))
 import Data.Tuple (Tuple(..))
-import Debug.Trace (traceAny, traceAnyM)
+import Debug.Trace (trace, traceM)
 import Effect.Class (liftEffect)
 import Effect.Now (now)
 import Network.HTTP.Affjax (AJAX, affjax, defaultRequest)
@@ -296,14 +296,14 @@ freshToken oauthHost
     freshAccess =
       (hushAff "Invalid access token." $ liftEffect $ isFresh accessToken)
       >>= if _
-        then traceAny "Access token is fresh" \_ -> pure $ Tuple accessToken refreshToken
-        else traceAny "Access expired" \_ -> throwError $ error "Access expired."
+        then trace "Access token is fresh" \_ -> pure $ Tuple accessToken refreshToken
+        else trace "Access expired" \_ -> throwError $ error "Access expired."
     freshRefresh :: Aff _ (Tuple String String)
     freshRefresh =
       (hushAff "Invalid refresh token." $ liftEffect $ isFresh refreshToken)
       >>= if _
         then refreshSession
-        else traceAny "Session expired" \_ -> throwError $ error "Session expired."
+        else trace "Session expired" \_ -> throwError $ error "Session expired."
     refreshSession :: Aff _ (Tuple String String)
     refreshSession = freshSession >>= formatResponse
     freshSession :: Aff _ TokenEndpointSuccessResponse
@@ -312,11 +312,11 @@ freshToken oauthHost
     formatResponse :: TokenEndpointSuccessResponse -> Aff _ (Tuple String String)
     formatResponse = either
         (\_ ->
-          traceAny "Failed to refresh session" \_ ->
+          trace "Failed to refresh session" \_ ->
           throwError $ error "Failed to refresh session."
         )
         (\(TokenEndpointSuccessResponseSuccess r) ->
-          traceAny "Refreshed session" \_ ->
+          trace "Refreshed session" \_ ->
           pure $ Tuple r.access_token r.refresh_token
         )
         <<< unwrap
@@ -342,22 +342,22 @@ isFresh accessToken =
       \{ exp } ->
         case exp of
           Just exp' ->
-            traceAny ("now=" <> show (unInstant now') <> " exp=" <> show (unInstant exp') <> " exp1000=" <> show ((unInstant exp') * (Milliseconds 1000.0)) ) \_->
-            traceAny ((unInstant exp') * (Milliseconds 1000.0) < (unInstant now')) \_->
+            trace ("now=" <> show (unInstant now') <> " exp=" <> show (unInstant exp') <> " exp1000=" <> show ((unInstant exp') * (Milliseconds 1000.0)) ) \_->
+            trace ((unInstant exp') * (Milliseconds 1000.0) < (unInstant now')) \_->
             unInstant now' < unInstant exp' * Milliseconds 1000.0
           Nothing ->
-            traceAny "Invalid exp value on accessToken." \_ ->
+            trace "Invalid exp value on accessToken." \_ ->
             false
 
 getCerts :: forall eff.
   String -> -- host
   Aff (ajax :: AJAX | eff) CertsResponse
 getCerts host = do
-  traceAnyM "getCerts"
+  traceM "getCerts"
   --res <- attempt $ affjax opts
   res <- affjax opts
-  traceAnyM "res"
-  traceAnyM res
+  traceM "res"
+  traceM res
   --pure $ unsafeCoerce (res.response :: Json)
   pure res.response
   where
@@ -375,12 +375,12 @@ getCerts host = do
 
 requestAccessTokenFromCode :: forall e. _ -> String -> String -> String -> Aff (ajax :: AJAX | e) _
 requestAccessTokenFromCode config clientState authRedirectUri code = do
-  traceAnyM "requestAccessTokenFromCode opts"
-  traceAnyM opts
+  traceM "requestAccessTokenFromCode opts"
+  traceM opts
   --res <- attempt $ affjax opts
   res <- affjax opts
-  traceAnyM "res"
-  traceAnyM res
+  traceM "res"
+  traceM res
   pure $ unsafeCoerce (res.response :: Json)
   where
     content =
@@ -409,11 +409,11 @@ getTokenByPassword :: forall eff.
   Aff (ajax :: AJAX | eff) TokenEndpointSuccessResponse
 getTokenByPassword host tokenRequest =
   do
-    traceAnyM "getToken opts"
-    traceAnyM opts
+    traceM "getToken opts"
+    traceM opts
     res <- affjax opts
-    traceAnyM "res"
-    traceAnyM res
+    traceM "res"
+    traceM res
     pure res.response
   where
     opts =
@@ -438,8 +438,8 @@ getTokenByRefresh :: forall eff.
   Aff (ajax :: AJAX | eff) TokenEndpointSuccessResponse
 getTokenByRefresh host tokenRequest = do
   res <- affjax opts
-  traceAnyM "res"
-  traceAnyM res
+  traceM "res"
+  traceM res
   pure res.response
   where
     opts =
@@ -463,8 +463,8 @@ getTokenByClientCredentials :: forall eff.
   Aff (ajax :: AJAX | eff) TokenEndpointSuccessResponse
 getTokenByClientCredentials host tokenRequest = do
   res <- affjax opts
-  traceAnyM "res"
-  traceAnyM res
+  traceM "res"
+  traceM res
   pure res.response
   where
     opts =
@@ -493,8 +493,8 @@ getTokenByClientCredentials host tokenRequest = do
 --  Aff (ajax :: AJAX | eff) UserInfoResponse
 --userInfo host access_token = do
 --  res <- affjax opts
---  traceAnyM "res"
---  traceAnyM res
+--  traceM "res"
+--  traceM res
 --  pure res.response
 --  where
 --    opts =
@@ -515,8 +515,8 @@ validateToken :: forall eff.
   Aff (ajax :: AJAX | eff) ValidateTokenResponse
 validateToken host tokenRequest = do
   res <- affjax opts
-  traceAnyM "res"
-  traceAnyM res
+  traceM "res"
+  traceM res
   --pure $ unsafeCoerce (res.response :: Json)
   pure res.response
   where
@@ -540,8 +540,8 @@ validateToken host tokenRequest = do
 --  Aff (ajax :: AJAX | eff) ValidateTokenResponse
 --endSession host tokenRequest = do
 --  res <- affjax opts
---  traceAnyM "res"
---  traceAnyM res
+--  traceM "res"
+--  traceM res
 --  --pure $ unsafeCoerce (res.response :: Json)
 --  pure res.response
 --  where
