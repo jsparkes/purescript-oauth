@@ -2,14 +2,14 @@ module Network.OAuth.TypeOld where
 
 import Data.Jwk.Type (Jwk)
 import Data.Either (Either)
-import Data.Foreign (F, Foreign)
-import Data.Foreign.Class (class IsForeign, read, readEitherR, readProp)
-import Data.Foreign.Generic (defaultOptions, readGeneric)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(Just))
 import Data.MediaType.Common (applicationJSON)
 import Data.Newtype (class Newtype)
 import Data.Tuple (Tuple(..))
+import Foreign (F, Foreign)
+import Foreign.Class (class IsForeign, read, readEitherR, readProp)
+import Foreign.Generic (defaultOptions, readGeneric)
 import Network.HTTP.Affjax.Response (class Respondable, ResponseType(..))
 import Prelude (bind, pure, ($), (<<<), (>>=))
 
