@@ -9,7 +9,6 @@ import Control.Monad.Except.Trans (throwError)
 import Data.Either (either)
 import Data.Maybe (Maybe(Just), maybe)
 import Data.Newtype (unwrap)
-import Debug.Trace (traceAny)
 
 -- Throws on Aff error channel
 ensureAuthed ::

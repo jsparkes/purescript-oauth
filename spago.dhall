@@ -17,6 +17,7 @@ to generate this file without the comments in this block.
   , "arrays"
   , "console"
   , "datetime"
+  , "debug"
   , "effect"
   , "foreign"
   , "jwt"
