@@ -23,6 +23,7 @@ to generate this file without the comments in this block.
   , "maybe"
   , "media-types"
   , "newtype"
+  , "now"
   , "prelude"
   ]
 , packages = ./packages.dhall
