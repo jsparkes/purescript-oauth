@@ -1,6 +1,6 @@
 module Network.OAuth.TypeOld where
 
-import App.Data.Jwk.Type (Jwk)
+import Data.Jwk.Type (Jwk)
 import Data.Either (Either)
 import Data.Foreign (F, Foreign)
 import Data.Foreign.Class (class IsForeign, read, readEitherR, readProp)

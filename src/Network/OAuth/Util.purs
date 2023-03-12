@@ -1,9 +1,8 @@
 module App.Network.OAuth.Util where
 
-import App.Prelude
-import App.Keycloak (keycloakClientId, keycloakClientSecret, keycloakHost, keycloakRealm)
-import App.Network.OAuth (freshToken, getTokenByClientCredentials)
-import App.Network.OAuth.Type (AccessTokenResponse, AccessTokenResponseSuccess(..))
+import Keycloak (keycloakClientId, keycloakClientSecret, keycloakHost, keycloakRealm)
+import Network.OAuth (freshToken, getTokenByClientCredentials)
+import Network.OAuth.Type (AccessTokenResponse, AccessTokenResponseSuccess(..))
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Exception (error)
 import Control.Monad.Except.Trans (throwError)

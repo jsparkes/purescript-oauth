@@ -2,9 +2,9 @@ module Network.OAuth.Type where
 
 import Prelude
 
-import App.Data.Aff (hushAff)
-import App.Formatting (messages)
-import App.Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
+import Data.Aff (hushAff)
+import Formatting (messages)
+import Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
 import Control.Alt ((<|>))
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff (Eff)
