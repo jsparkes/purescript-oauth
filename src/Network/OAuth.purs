@@ -145,8 +145,8 @@ implicitAuthRequestArgs client_id redirect_uri scope state =
 authTokenByImplicit :: forall eff.
      AuthEndpointClient AccessToken
   -> AuthRequestArgs AccessToken
-  -> (Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse AccessToken) -> Eff eff Unit)
-  -> Eff eff Unit
+  -> (Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse AccessToken) -> Effect Unit)
+  -> Effect Unit
 authTokenByImplicit
   (AuthEndpointClient openAuth listenForAuth)
   authArgs handleResponse = openAuth authArgs *> listenForAuth handleResponse
@@ -155,11 +155,10 @@ authTokenByImplicit
 -- ??? Where do these two go?
 
 reqTokenEndpoint ::
-  forall eff grantType.
      TokenEndpointClient grantType
   -> TokenRequestArgs
-  -> (Either TokenEndpointErrorResponse (TokenEndpointSuccessResponse grantType) -> Eff eff Unit)
-  -> Eff eff Unit
+  -> (Either TokenEndpointErrorResponse (TokenEndpointSuccessResponse grantType) -> Effect Unit)
+  -> Effect Unit
 reqTokenEndpoint
   (TokenEndpointClient reqToken)
   tokenArgs handleResponse = reqToken tokenArgs >>= handleResponse

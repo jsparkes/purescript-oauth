@@ -11,7 +11,20 @@ When creating a new Spago project, you can use
 to generate this file without the comments in this block.
 -}
 { name = "my-project"
-, dependencies = [ "console", "effect", "jwt", "prelude" ]
+, dependencies =
+  [ "affjax"
+  , "argonaut-core"
+  , "arrays"
+  , "console"
+  , "datetime"
+  , "effect"
+  , "foreign"
+  , "jwt"
+  , "maybe"
+  , "media-types"
+  , "newtype"
+  , "prelude"
+  ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
 }
