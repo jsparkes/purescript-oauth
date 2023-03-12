@@ -2,12 +2,10 @@ module Network.OAuth.Type where
 
 import Prelude
 
-import Data.Aff (hushAff)
-import Formatting (messages)
-import Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
+-- import Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
 import Control.Alt ((<|>))
 import Control.Monad.Aff (Aff)
-import Control.Monad.Eff (Eff)
+import Effect (Effect)
 import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Eff.Exception (error, message)
 import Control.Monad.Eff.Now (now)
@@ -80,10 +78,10 @@ newtype ClientReceptionEndpoint = ClientReceptionEndpoint String -- Called "Redi
 newtype AuthEndpointClient (requestType :: AuthorizationRequestType) =
   AuthEndpointClient
     -- AuthorizationEndpoint ??? Include in data type?
-    (AuthRequestArgs requestType -> Eff eff Unit)
+    (AuthRequestArgs requestType -> Effect Unit)
     -- ^ Spawn browser or child window to send user-agent to authorization server.
-    ((Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse requestType) -> Eff eff Unit)
-      -> Eff eff Unit
+    ((Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse requestType) -> Effect Unit)
+      -> Effect Unit
     )
     -- ^ Listen for HTTP request or child window event having authorization token.
 
@@ -134,7 +132,7 @@ authTokenTypeCode = unsafePartial fromRight parseAuthTokenRequestCode "token"
 newtype TokenEndpointClient (grantType :: TokenRequestGrantType) =
   TokenEndpointClient
     -- TokenEndpoint ??? Include in data type?
-    (TokenRequestArgs grantType -> Eff eff Unit)
+    (TokenRequestArgs grantType -> Effect Unit)
     -- ^ Send HTTP request to get Access Token
 
 -- 3.3: Access Token Scope

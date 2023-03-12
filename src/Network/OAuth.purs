@@ -2,9 +2,9 @@ module Network.OAuth where
 
 import Prelude
 import Jwt as Jwt
-import App.Data.Aff (hushAff)
-import App.Formatting (messages)
-import App.Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
+import Data.Aff (hushAff)
+import Formatting (messages)
+import Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSuccess(..), CertsResponse, ValidateTokenResponse)
 import Control.Alt ((<|>))
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff (Eff)
@@ -35,19 +35,17 @@ import Unsafe.Coerce (unsafeCoerce)
 -- 4: Obtaining Authorization
 
 sendAuthRequest ::
-  forall eff requestType.
      AuthEndpointClient requestType
   -> (AuthRequestArgs requestType)
-  -> (Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse requestType) -> Eff eff Unit)
-  -> Eff eff Unit
+  -> (Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse requestType) -> Effect Unit)
+  -> Effect Unit
 sendAuthRequest
   (AuthEndpointClient openAuth listenForAuth)
   authArgs handleResponse = do
   openAuth authArgs
   listenForAuth handleResponse
 
-sendAuthReqeust'
-  :: forall eff requestType.
+sendAuthRequest' ::
      AuthEndpointClient requestType
   -> (AuthRequestArgs requestType)
   -> ContT Unit (Eff eff)
@@ -56,11 +54,10 @@ sendAuthRequest' = ContT <<< sendAuthRequest
 
 
 sendTokenRequest ::
-  forall eff grantType.
      TokenEndpointClient grantType
   -> TokenRequestArgs grantType
-  -> (Either TokenEndpointErrorResponse (TokenEndpointSuccessResponse grantType) -> Eff eff Unit)
-  -> Eff eff Unit
+  -> (Either TokenEndpointErrorResponse (TokenEndpointSuccessResponse grantType) -> Effect Unit)
+  -> Effect Unit
 sendTokenRequest
   (TokenEndpointClient requestToken)
   (TokenRequestArgs client_id redirect_uri scope state)

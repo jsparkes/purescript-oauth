@@ -28,9 +28,9 @@ authEndpointClientForCLIApp =
               $ mostCommonDesktopForPlatform $ fromMaybe Linux platform
     listenForAuth ::
       (Either AuthorizationEndpointErrorResponse (AuthorizationEndpointSuccessResponse tokenType)
-        -> Eff eff Unit
+        -> Effect Unit
       )
-      -> Eff eff Unit
+      -> Effect Unit
     listenForAuth cb = do
       server <- createServer $ listenHandler cb
       !!! Move to util, consider using lens instead.
