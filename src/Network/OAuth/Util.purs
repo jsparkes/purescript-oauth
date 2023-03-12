@@ -3,11 +3,11 @@ module Network.OAuth.Util where
 import Keycloak (keycloakClientId, keycloakClientSecret, keycloakHost, keycloakRealm)
 import Network.OAuth (freshToken, getTokenByClientCredentials)
 import Network.OAuth.Type (AccessTokenResponse, AccessTokenResponseSuccess(..))
-import Control.Monad.Aff (Aff)
 import Control.Monad.Except.Trans (throwError)
 import Data.Either (either)
 import Data.Maybe (Maybe(Just), maybe)
 import Data.Newtype (unwrap)
+import Effect.Aff (Aff)
 
 -- Throws on Aff error channel
 ensureAuthed ::
