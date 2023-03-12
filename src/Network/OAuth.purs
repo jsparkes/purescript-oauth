@@ -8,8 +8,6 @@ import Network.OAuth.Type (TokenEndpointSuccessResponse, AccessTokenResponseSucc
 import Control.Alt ((<|>))
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (liftEff)
-import Control.Monad.Eff.Exception (error, message)
 import Control.Monad.Eff.Now (now)
 import Control.Monad.Error.Class (throwError)
 import Control.Monad.Except (runExcept)
@@ -28,6 +26,7 @@ import Data.String (length)
 import Data.Time.Duration (Milliseconds(..))
 import Data.Tuple (Tuple(..))
 import Debug.Trace (traceAny, traceAnyM)
+import Effect.Class (liftEffect)
 import Network.HTTP.Affjax (AJAX, affjax, defaultRequest)
 import Network.HTTP.RequestHeader (RequestHeader(..))
 import Unsafe.Coerce (unsafeCoerce)
@@ -83,6 +82,7 @@ tokenByAuthorizationToken
   (AuthEndpointClient)
   (TokenEndpointClient)
   = do
+    unit
   -- !!! to do
 
 -- 4.1.3: Access Token Request
@@ -294,13 +294,13 @@ freshToken oauthHost
   where
     freshAccess :: Aff _ (Tuple String String)
     freshAccess =
-      (hushAff "Invalid access token." $ liftEff $ isFresh accessToken)
+      (hushAff "Invalid access token." $ liftEffect $ isFresh accessToken)
       >>= if _
         then traceAny "Access token is fresh" \_ -> pure $ Tuple accessToken refreshToken
         else traceAny "Access expired" \_ -> throwError $ error "Access expired."
     freshRefresh :: Aff _ (Tuple String String)
     freshRefresh =
-      (hushAff "Invalid refresh token." $ liftEff $ isFresh refreshToken)
+      (hushAff "Invalid refresh token." $ liftEffect $ isFresh refreshToken)
       >>= if _
         then refreshSession
         else traceAny "Session expired" \_ -> throwError $ error "Session expired."
